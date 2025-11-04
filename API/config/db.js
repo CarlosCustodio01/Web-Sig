@@ -19,7 +19,7 @@ const dbConfigs = {
     Sitio_Ecologico: {
         user: 'Felipe',
         host: 'Localhost',
-        database: 'Sitio_Ecologico',
+        database: 'sitio_ecologico',
         password: 'carlosfelipe',
         port: 5432,
     },
