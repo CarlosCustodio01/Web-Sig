@@ -12,7 +12,7 @@
 <body>
 
   <div class="conteiner">
-    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <button id="menuToggle" class="menu-toggle" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Abrir menu" onclick="toggleMenu()">☰</button>
     <div class="top-bar">
       
       <div class="image-top">
@@ -51,7 +51,7 @@
     <div id="map"></div>
 
     <!-- INÍCIO: adicionado — sidebar recolhível -->
-    <aside class="sidebar" aria-hidden="true">
+    <aside id="sidebarMenu" class="sidebar" role="navigation" aria-hidden="true" tabindex="-1">
       <nav>
         <ul>
           <li><a href="#" onclick="atualizarIframe('CafeAcaua/index.html', 'SÍTIO ECOLÓGICO: CAFÉ ACUAÊ'); toggleMenu(); return false;">Café Acauê</a></li>
