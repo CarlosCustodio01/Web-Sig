@@ -34,6 +34,8 @@ body {
   justify-content: space-between; /* 👈 faz o texto ir pro canto direito */
   padding: 0 0px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* leve sombra */
+  position: relative;
+  z-index: 200;
 }
 
 .image-top {
@@ -127,12 +129,47 @@ body {
   padding: 0;
 }
 
+/* botão menu fixo no centro lateral esquerdo */
 .menu-toggle {
-  display: none; /* escondido por padrão */
+  position: fixed !important;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: block !important;
   font-size: 26px;
-  color: rgb(202, 14, 14);
+  color: #fff;
+  background: rgba(0,0,0,0.18);
+  padding: 8px 10px;
+  border-radius: 6px;
+  z-index: 9999;
   cursor: pointer;
-  margin-right: 15px;
+  user-select: none;
+  backdrop-filter: blur(2px);
+  transition: left 0.25s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+/* quando o container tiver a classe sidebar-open, move o botão junto da borda da sidebar */
+.conteiner.sidebar-open .menu-toggle {
+  left: calc(260px + 10px); /* 260px = largura da sidebar + 10px de folga */
+}
+
+/* em telas pequenas mantém o botão visível e também o move para a borda da sidebar quando aberto */
+@media (max-width: 800px) {
+  .conteiner.sidebar-open .menu-toggle {
+    left: calc(260px + 10px);
+  }
+}
+
+/* ajuste em telas muito pequenas para não ficar sobre conteúdo importante */
+@media (max-width: 400px) {
+  .menu-toggle {
+    left: 6px;
+    font-size: 22px;
+    padding: 6px 8px;
+  }
+  .conteiner.sidebar-open .menu-toggle {
+    left: calc(260px + 6px);
+  }
 }
 
 /* Mapa ocupa o restante da tela */
@@ -140,4 +177,84 @@ body {
   flex: 1;
   width: 100%;
   z-index: 0;
+}
+
+/* ===== Sidebar recolhível e ajuste do mapa (adicionado) ===== */
+.sidebar {
+  position: fixed;
+  top: 70px; /* abaixo da top-bar */
+  left: -260px; /* escondida por padrão */
+  width: 260px;
+  height: calc(100% - 70px);
+  background: #ffffff;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.12);
+  overflow-y: auto;
+  transition: left 0.25s ease;
+  z-index: 100;
+}
+
+/* mostrar sidebar */
+.sidebar.open {
+  left: 0;
+}
+
+/* ajusta o mapa quando a sidebar estiver aberta em telas largas */
+#map {
+  transition: margin-left 0.25s ease, filter 0.2s ease;
+}
+
+/* em desktop, empurra o mapa */
+@media (min-width: 801px) {
+  /* quando a classe sidebar-open estiver ativa, o mapa ocupa o restante da largura */
+  .conteiner.sidebar-open #map {
+    margin-left: 260px;                   /* desloca para a direita o espaço da sidebar */
+    width: calc(100% - 260px);           /* reduz largura para não causar overflow */
+    transition: margin-left 0.25s ease, width 0.25s ease;
+    box-sizing: border-box;
+  }
+}
+
+/* em mobile, sidebar é overlay e o mapa é escurecido/desativado enquanto aberto */
+@media (max-width: 800px) {
+  .sidebar {
+    left: -260px;
+  }
+  .sidebar.open {
+    left: 0;
+  }
+  .conteiner.overlay-shown #map {
+    filter: brightness(0.7);
+    pointer-events: none;
+  }
+}
+
+/* estilos simples para o conteúdo do menu (ajuste conforme necessário) */
+.sidebar nav {
+  padding: 12px;
+  font-family: 'Open Sans', sans-serif;
+}
+.sidebar nav ul {
+  list-style: none;
+}
+.sidebar nav li {
+  margin: 8px 0;
+}
+.sidebar nav a {
+  color: #333;
+  text-decoration: none;
+  padding: 8px 10px;
+  display: block;
+  border-radius: 4px;
+}
+.sidebar nav a:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+/* pequeno ajuste visual em telas muito pequenas */
+@media (max-width: 400px) {
+  .menu-toggle {
+    left: 8px;
+    top: 12px;
+    font-size: 22px;
+  }
 }
