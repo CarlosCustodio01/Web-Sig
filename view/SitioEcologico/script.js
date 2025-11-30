@@ -1,3 +1,9 @@
+
+console.log("Google:", window.google);
+console.log("Mutant:", L.gridLayer && L.gridLayer.googleMutant);
+
+
+
 function ajustarSidebar() {
             const cabecalho = document.getElementById("cabecalho");
             const sidebar = document.getElementById("mySidebar");
@@ -73,10 +79,14 @@ function ajustarSidebar() {
         // Inicializa o mapa
         const map = L.map('map', {
             zoomControl: false,
-            maxZoom: 22,      // permite zoom maior no mapa (mas depende dos tiles)
-            zoomSnap: 0.25,   // permite passos fracionários se desejar
+            zoomAnimation: true,
+            fadeAnimation: true,
+            markerZoomAnimation: true,
+            maxZoom: 23,
+            zoomSnap: 0.25,
             zoomDelta: 0.25
         }).setView([-23.0818420,-45.8220342], 18);
+
         
 
         // OpenStreetMap (mantém como camada base)
@@ -87,27 +97,30 @@ function ajustarSidebar() {
             detectRetina: false
         });
 
-        // Tentar criar camadas Google (requer Google Maps JS carregado e plugin GoogleMutant)
-        let googleSatLayer = null;
-        let googleHybridLayer = null;
-        if (window.google && L.GridLayer && L.gridLayer && typeof L.gridLayer.googleMutant === 'function') {
-            try {
-                // satélite puro
-                googleSatLayer = L.gridLayer.googleMutant({
-                    type: 'satellite',
-                    maxZoom: 21
-                });
-                // hybrid (satélite + rótulos)
-                googleHybridLayer = L.gridLayer.googleMutant({
-                    type: 'hybrid',
-                    maxZoom: 21
-                });
-            } catch (err) {
-                console.warn('GoogleMutant disponível, mas falha ao criar camadas Google:', err);
-                googleSatLayer = null;
-                googleHybridLayer = null;
+        // Google Satélite (sem API Key, sem Mutant)
+        
+        // Google Satélite
+        const googleSatLayer = L.tileLayer(
+            'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+            {
+                maxNativeZoom: 20,   // tile real
+                maxZoom: 23,         // zoom permitido
+                attribution: 'Map data © Google'
             }
-        }
+        );
+
+        // Google Híbrido
+        const googleHybridLayer = L.tileLayer(
+            'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+            {
+                maxNativeZoom: 20,   // tile real
+                maxZoom: 23,         // zoom permitido (esticado)
+                attribution: 'Map data © Google'
+            }
+        );
+
+
+       
 
         // Fallback (ESRI WorldImagery) caso Google não esteja disponível
         const esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -115,14 +128,16 @@ function ajustarSidebar() {
         });
 
         // Adiciona controle de camadas base (OSM como padrão)
-        const baseLayers = { "OpenStreetMap": osmLayer };
-        if (googleSatLayer) baseLayers["Google Satellite"] = googleSatLayer;
-        if (googleHybridLayer) baseLayers["Google Hybrid"] = googleHybridLayer;
-        baseLayers["ESRI WorldImagery"] = esriLayer;
+            const baseLayers = {
+            "OpenStreetMap": osmLayer,
+            "Google Satélite": googleSatLayer,
+            "Google Híbrido": googleHybridLayer,
+            "ESRI WorldImagery": esriLayer
+        };
+
 
         // adiciona o controle e define OSM como camada inicial
-        L.control.layers(baseLayers, null, { collapsed: false, position: 'topright' }).addTo(map);
-        osmLayer.addTo(map);
+        googleHybridLayer.addTo(map);
  
         L.control.zoom({ position: 'bottomright' }).addTo(map);
  
@@ -246,6 +261,66 @@ function ajustarSidebar() {
         // ✅ CARREGAR LINHAS (ficam VERDES) - pane de linhas (abaixo dos pontos)
         loadGeoJSON("linhas_cafe", geojsonUrlLinhas, LinhaPlantioStyle, 'linesPane');
 
-        // chaves/URLs corretas
-        loadGeoJSON("linhas", geojsonUrl1, LinhaPlantioStyle);
-        loadGeoJSON("cafe", geojsonUrl2, CafeStyle);
+
+
+
+
+
+
+
+
+
+
+
+        function limparBases() {
+            map.removeLayer(osmLayer);
+            map.removeLayer(googleSatLayer);
+            map.removeLayer(googleHybridLayer);
+            map.removeLayer(esriLayer);
+        }
+
+        function aplicarMapaBase(valor) {
+            limparBases();
+
+            if (valor === "osm") osmLayer.addTo(map);
+            if (valor === "google_sat") googleSatLayer.addTo(map);
+            if (valor === "google_hyb") googleHybridLayer.addTo(map);
+            if (valor === "esri") esriLayer.addTo(map);
+        }
+
+        document.querySelectorAll("input[name='basemap']").forEach(radio => {
+            radio.addEventListener("change", () => {
+                aplicarMapaBase(radio.value);
+            });
+        });
+
+
+       function toggleMenuUnico() {
+            const box = document.getElementById("boxMenuUnico");
+
+            if (box.style.display === "block") {
+                box.style.display = "none";
+            } else {
+                box.style.display = "block";
+            }
+        }
+
+        function toggleLayer(nome) {
+            const layer = layers[nome];
+
+            if (!layer) {
+                console.warn("Camada não encontrada:", nome);
+                return;
+            }
+
+            if (map.hasLayer(layer)) {
+                map.removeLayer(layer);
+            } else {
+                map.addLayer(layer);
+            }
+        }
+
+
+
+
+       

@@ -85,7 +85,7 @@
             z-index: 2000;
             font-size: 26px;
             cursor: pointer;
-            color: rgb(0, 0, 0);
+            color: aliceblue;
 
             /* ✅ Remove totalmente o fundo */
             background: none;
@@ -118,7 +118,7 @@
 
         .openbtn.menu-open::after {
             font-size: 30px; /* exibe só o X */
-            color: rgb(0, 0, 0);
+            color: aliceblue;
         }
 
         #main {
@@ -407,3 +407,175 @@
         :root {
             --altura-header: 70px; /* ajuste conforme sua necessidade */
         }
+
+        .legend-control {
+            font-family: system-ui, Arial, sans-serif;
+            background: rgba(255,255,255,0.95);
+            color: #222;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            width: 220px;
+            overflow: hidden;
+            transition: transform 180ms ease, opacity 180ms ease;
+        }
+
+        .legend-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .legend-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .legend-toggle {
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .legend-content {
+            padding: 8px 10px 12px 10px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            max-height: 220px;
+            overflow: auto;
+            font-size: 13px;
+        }
+
+        .legend-control.collapsed .legend-content {
+            display: none;
+        }
+
+        /* símbolos */
+        .symbol {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .symbol.line-p {
+            width: 28px;
+            height: 6px;
+            background: #4DB411;
+            border-radius: 3px;
+        }
+        .symbol.point {
+            width: 10px;
+            height: 10px;
+            background: #8B4513;
+            border-radius: 50%;
+        }
+        .symbol.perimeter {
+            width: 28px;
+            height: 0;
+            border-top: 4px dashed #ff3b3b;
+            margin-top: 6px;
+        }
+
+        /* responsividade: no mobile a legenda fica mais larga e posicionada um pouco mais dentro */
+        @media (max-width: 600px) {
+            .legend-control {
+                width: calc(100% - 24px);
+                margin-right: 12px;
+                margin-left: 12px;
+            }
+            .legend-content {
+                max-height: 40vh;
+            }
+        }
+
+        .social-icons {
+            display: block;
+            flex-direction: column; /* 🔥 coloca um embaixo do outro */
+        }
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* Botão único */
+        .btn-menu-unico {
+            position: absolute;
+            right: 15px;
+            top: 80px; /* ajuste conforme preferir */
+            z-index: 1000;
+            padding: 8px 14px;
+            background:rgb(102, 134, 74);
+            border: 1px solid rgb(102, 134, 74);
+            border-radius: 8px;
+            cursor: pointer;
+            color: aliceblue;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        /* Caixa unificada */
+        .box-menu-unico {
+            font-family: 'Open Sans', sans-serif;
+            position: absolute;
+            right: 15px;
+            top: 120px;
+            width: 220px;
+            background: rgb(102, 134, 74);
+            border: 1px solid rgb(102, 134, 74);
+            border-radius: 8px;
+            padding: 12px;
+            z-index: 1000;
+            color: aliceblue;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+            display: none;
+        }
+
+        .box-menu-unico h3 {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+
+        .menu-radio {
+            display: block;
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        /* Legenda */
+        .item-legenda {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .cor {
+            width: 8px;
+            height: 8px;
+            display: inline-block;
+            border-radius: 4px;
+            margin-right: 8px;
+            margin-left: 5px;
+        }
+
+        .cor-verde   { background: #4DB411; }
+        .cor-marrom  { background: #8B4513; }
+        .cor-vermelho{ background: #ff3b3b; }

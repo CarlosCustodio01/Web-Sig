@@ -4,22 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Site</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- ADICIONAR: Google Maps JS (necessário para usar a camada Google) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-
-    <!-- ADICIONAR: Leaflet Google Mutant (gera camadas do Google dentro do Leaflet) -->
-    <script src="https://unpkg.com/leaflet.gridlayer.googlemutant@latest/Leaflet.GoogleMutant.js"></script>
-
     <link rel="stylesheet" href="style.css">
-
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header class="cabecalho" id="cabecalho">
+        
         <div class="cabecalho-container">
             <img src="Imagem/Logo_Sitio.png" alt="Logo do Sítio" class="logo-img">
 
@@ -46,9 +38,27 @@
                 <div class="link-div" onclick="atualizarIframe('pagina6.html', 'SÍTIO ECOLÓGICO: CAFÉ GUARÁ')">
                     <p class="til-botao">Desenvolvedores</p>
                 </div>
+            </div>
 
-                </div>
-
+            <div class="social-icons">
+                <a href="https://facebook.com/seuPerfil" target="_blank" class="icon-social">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="#1877F2">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12S0 
+                        6.373 0 12.073c0 5.99 4.388 10.954 10.125 
+                        11.854v-8.385H7.078v-3.47h3.047V9.413c0-3.007 
+                        1.792-4.669 4.533-4.669 1.312 0 2.686.235 
+                        2.686.235v2.953h-1.513c-1.491 
+                        0-1.953.925-1.953 1.874v2.25h3.328l-.532 
+                        3.47h-2.796v8.385C19.612 23.027 24 18.062 24 
+                        12.073z"/>
+                    </svg>
+                </a>
+                
+                <a href="https://instagram.com/seuPerfil" target="_blank" class="icon-social">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="#E4405F">
+                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7.25a4.75 4.75 0 1 1 0 9.5a4.75 4.75 0 0 1 0-9.5zm0 1.5a3.25 3.25 0 1 0 0 6.5a3.25 3.25 0 0 0 0-6.5zm4.88-.63a.88.88 0 1 1 0 1.76a.88.88 0 0 1 0-1.76z"/>
+                    </svg>
+                </a>
             </div>
             
         </div>
@@ -98,6 +108,10 @@
 
         </div>
 
+        
+
+        
+
         <div class="gallery-container">
             <button class="btn-voltar-galeria" onclick="voltarMenu()">
                 ⟵ Voltar
@@ -129,10 +143,60 @@
     </div>
 
     <div id="main">
+
         <div id="map"></div>
         <!-- Conteúdo principal -->
     </div>
 
+    <!-- Botão único -->
+    <button id="btnMenuUnico" class="btn-menu-unico" onclick="toggleMenuUnico()">LEGENDA</button>
+
+    <!-- Caixa unificada -->
+    <div id="boxMenuUnico" class="box-menu-unico">
+
+        <h3>🗺️ Mapas Base</h3>
+
+        <label class="menu-radio">
+            <input type="radio" name="basemap" value="osm">
+            OpenStreetMap
+        </label>
+
+
+        <label class="menu-radio">
+            <input type="radio" name="basemap" value="google_hyb" checked>
+            Google Híbrido
+        </label>
+
+        <label class="menu-radio">
+            <input type="radio" name="basemap" value="esri">
+            ESRI WorldImagery
+        </label>
+
+        <hr>
+
+        <h3>Legenda</h3>
+
+        <div class="item-legenda">
+            <input type="checkbox" checked onchange="toggleLayer('linhas_cafe')">
+            <span class="cor cor-verde"></span> Linhas de Plantio
+        </div>
+
+        <div class="item-legenda">
+            <input type="checkbox" checked onchange="toggleLayer('pontos_cafe')">
+            <span class="cor cor-marrom"></span> Pontos de Café
+        </div>
+
+        <div class="item-legenda">
+            <input type="checkbox" checked onchange="toggleLayer('perimetro')">
+            <span class="cor cor-vermelho"></span> Perímetro
+        </div>
+
+    </div>
+
+    
+
     <script src="script.js"></script>
+</body>
+</html>
 
 
