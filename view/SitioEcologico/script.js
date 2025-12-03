@@ -321,6 +321,68 @@ function ajustarSidebar() {
         }
 
 
+/* ===========================
+    DROPDOWN DO DOWNLOAD
+=========================== */
 
+function toggleDropdown() {
+    const menu = document.getElementById("dropdown-menu");
+    const boxLegenda = document.getElementById("boxMenuUnico"); 
+    const btnLegenda = document.getElementById("btnMenuUnico");
+
+    const abrir = !menu.classList.contains("show");
+
+    // Abre/fecha o menu de download
+    menu.classList.toggle("show");
+
+    if (abrir) {
+        // 🔥 Abrindo → esconde legenda e botão
+        if (boxLegenda) boxLegenda.style.display = "none";
+        if (btnLegenda) btnLegenda.style.display = "none";
+    } else {
+        // 🔥 Fechando → mostra o botão novamente
+        if (btnLegenda) btnLegenda.style.display = "block";
+    }
+}
+
+function baixarArquivo(arquivo) {
+    // ajuste a pasta caso necessário
+    window.location.href = "Downloads/" + arquivo;
+}
+
+// Fechar dropdown ao clicar fora
+document.addEventListener("click", function(e) {
+    const dropdown = document.querySelector(".dropdown");
+    const menu = document.getElementById("dropdown-menu");
+    const btnLegenda = document.getElementById("btnMenuUnico");
+
+    // clicou fora do download
+    if (!dropdown.contains(e.target)) {
+        menu.classList.remove("show");
+
+        // 🔥 mostra o botão LEGENDA de novo
+        if (btnLegenda) btnLegenda.style.display = "block";
+    }
+});
+
+
+function ajustarDropdownDegrade() {
+    const btn = document.getElementById("btnDownload");
+    const menu = document.getElementById("dropdown-menu");
+
+    if (!btn || !menu) return;
+
+    // posição do botão em relação ao viewport
+    const rect = btn.getBoundingClientRect();
+
+    // deslocamento horizontal no degradê
+    const posX = rect.left;
+
+    // aplica a posição no degradê
+    menu.style.backgroundPositionX = `-${posX}px`;
+}
+
+window.addEventListener("resize", ajustarDropdownDegrade);
+window.addEventListener("load", ajustarDropdownDegrade);
 
        

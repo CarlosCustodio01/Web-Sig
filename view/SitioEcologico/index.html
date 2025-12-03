@@ -8,6 +8,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="cabecalho" id="cabecalho">
@@ -44,8 +47,19 @@
                 <div class="link-div" onclick="atualizarIframe('pagina6.html', 'SÍTIO ECOLÓGICO: CAFÉ GUARÁ')">
                     <p class="til-botao">Desenvolvedores</p>
                 </div>
-                <div class="link-div" onclick="atualizarIframe('pagina6.html', 'SÍTIO ECOLÓGICO: CAFÉ GUARÁ')">
-                    <p class="til-botao">Download</p>
+                <div class="dropdown" id="btnDownload">
+                    <div class="link-div" onclick="toggleDropdown()">
+                        <p class="til-botao">Download</p>
+                    </div>
+
+                    <div id="dropdown-menu" class="dropdown-menu">
+
+                        <div class="dropdown-title">Downloads:</div>
+
+                        <p onclick="baixarArquivo('todas.zip')">Todas as Camadas (ZIP)</p>
+                        <p onclick="baixarArquivo('kmz.zip')">KMZ do Sítio</p>
+                        <p onclick="baixarArquivo('shp.zip')">Shapefiles</p>
+                    </div>
                 </div>
             </div>
 

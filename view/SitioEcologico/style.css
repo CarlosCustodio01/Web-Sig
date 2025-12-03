@@ -234,6 +234,7 @@
         }
 
         .til-botao {
+            user-select: none; /* impede seleção de texto */
             color: aliceblue;
             margin: 0;
             font-family: 'Open Sans', sans-serif;
@@ -581,3 +582,136 @@
         .cor-verde   { background: #4DB411; }
         .cor-marrom  { background: #8B4513; }
         .cor-vermelho{ background: #ff3b3b; }
+
+
+
+
+
+
+
+
+
+        /* ===== DROPDOWN ===== */
+.dropdown {
+    position: relative;
+}
+
+/* MENU: fundo igual ao header, mas com refinamentos */
+.dropdown-menu {
+    position: absolute;
+    top: 46px;  /* já está ótimo, não vou mexer */
+    left: 0;
+    width: 220px; /* um pouquinho maior melhora a legibilidade */
+
+    background: linear-gradient(
+        to right,
+        rgb(180, 215, 150),
+        rgb(92, 118, 22)
+    );
+
+    background-size: 100vw 100%;
+    background-repeat: no-repeat;
+
+    border-radius: 0 0 10px 10px; /* 🔥 bordas só embaixo (fica MUITO mais elegante) */
+    padding: 6px 0;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35); /* 🔥 sombra suave e profissional */
+
+    display: none;
+    z-index: 99999;
+
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity .20s ease, transform .20s ease;
+}
+
+/* Quando ativado pela classe .show */
+.dropdown-menu.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Itens do menu */
+.dropdown-menu p {
+    margin: 0;
+    padding: 10px 18px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.3px; /* fica mais elegante */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+/* Linha divisória entre itens */
+.dropdown-menu p + p {
+    border-top: 1px solid rgba(255,255,255,0.25);
+}
+
+/* Hover bonito */
+.dropdown-menu p:hover {
+    background: rgba(255,255,255,0.18);
+}
+
+.dropdown-menu, 
+.dropdown-menu * {
+    user-select: none; /* impede seleção de texto */
+}
+
+.dropdown-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 13px;       /* 🔥 menor */
+    color: white;
+    padding: 5px 5px;     /* 🔥 menos altura */
+    user-select: none;     /* não selecionar */
+
+    opacity: 0.9;          /* mais suave */
+}
+
+
+/* ================================
+   RESPONSIVIDADE PARA NOTEBOOKS
+   ================================ */
+
+@media (max-width: 1280px) and (min-width: 901px) {
+
+    .cabecalho-container {
+        gap: 8px !important;
+        padding: 0 10px;
+    }
+
+    /* Reduz largura dos botões */
+    .link-div {
+        width: 95px !important;   /* antes era 130px */
+    }
+
+    .til-botao {
+        font-size: 11px !important;
+    }
+
+    /* Logo um pouco menor */
+    .logo-img {
+        width: 80px !important;
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    /* Ícones sociais alinhados à direita sem quebrar */
+    .social-icons {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 6px;
+    }
+
+    /* Remover altura extra do header */
+    .cabecalho {
+        padding: 4px 0 !important;
+    }
+}
