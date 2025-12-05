@@ -1,607 +1,507 @@
+/* =========================================================
+   1. RESET + VARIÁVEIS
+========================================================= */
 * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            padding: 0;
-        }
+body {
+    margin: 0;
+    padding: 0;
+}
 
-        .cabecalho {
-            background: linear-gradient(
-                to right,
-                rgb(180, 215, 150),
-                rgb(92, 118, 22)
-            );
-            width: 100%;
-            height: auto;
-            padding: 5px 5px;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+:root {
+    --altura-header: 70px;
+}
 
-        .cabecalho-container {
-                width: 100%;
-                display: flex;
-                align-items: center; /* ✅ centraliza verticalmente */
-                justify-content: center; /* ✅ centraliza horizontalmente */
-                gap: 20px; /* opcional: espaçamento entre logo e botões */
-        }
+/* =========================================================
+   2. HEADER
+========================================================= */
+.cabecalho {
+    background: linear-gradient(
+        to right,
+        rgb(180, 215, 150),
+        rgb(92, 118, 22)
+    );
+    width: 100%;
+    height: auto;
+    padding: 5px 5px;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 
-        .logo-img {
-            margin-left: 60px;
-            padding-left: 10px;
-            width: 100px;
-            height: auto;
-        }
+.cabecalho-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* volta a centralizar em telas maiores */
+    gap: 20px;
+    /* removidas as regras 'justify-content: space-between' e 'flex-wrap: nowrap' aqui */
+}
 
-        .sidebar {
-            top: var(--altura-header);
-            height: calc(100vh - var(--altura-header));
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 20px;
-            background: linear-gradient(
-                to right,
-                rgb(180, 215, 150),
-                rgb(92, 118, 22)
-            );
-            background-size: 100vw 100%;  /* ocupa toda largura da tela */
-            background-position-x: 0;     /* começa do mesmo ponto do header */
-            z-index: 5000 !important;
-        }
+.logo-img {
+    margin-left: 60px;
+    padding-left: 10px;
+    width: 100px;
+    height: auto;
+}
 
-        .sidebar a {
-            padding: 10px 10px 10px 32px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
+/* =========================================================
+   3. BOTÕES DO HEADER (CAFÉS)
+========================================================= */
+.botao {
+    display: flex;
+    flex-wrap: wrap;         /* permite quebrar em telas grandes se necessário */
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    height: 100%;
+    min-width: 0;
+    overflow: visible;       /* evita cortar conteúdo em telas maiores */
+}
 
-        .sidebar a:hover {
-            color: #f1f1f1;
-        }
+.link-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* CENTRALIZA VERTICAL */
+    align-items: center;     /* CENTRALIZA HORIZONTAL */
+    
+    min-width: 110px;   /* Aumenta o tamanho visual do botão */
+    padding: 10px 6px;  /* Altura real — agora com px */
+    height: 40px;       /* Altura uniforme e centralizada */
+    
+    flex: 0 0 auto;
+    box-sizing: border-box;
+}
 
-        .sidebar .closebtn {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 36px;
-        }
+.link-div:hover {
+    transform: scale(1.05);
+}
 
-        .openbtn {
-            position: fixed;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2000;
-            font-size: 26px;
-            cursor: pointer;
-            color: aliceblue;
+.link-div::after {
+    content: ' ';
+    display: block;
+    width: 100%;
+    height: 4px;
+    background-color: rgb(213, 235, 212);
+    transition: height 0.3s;
+    margin-top: 5px;
+}
 
-            /* ✅ Remove totalmente o fundo */
-            background: none;
-            border: none;
+.link-div:hover::after {
+    height: 6px;
+}
 
-            padding: 0px 0px;
-            transition: 
-                left 0.4s ease,
-                transform 0.4s ease,
-                background-color 0.3s ease,
-                font-size 0.3s ease;
-        }
+.til-botao {
+    user-select: none;
+    color: aliceblue;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: normal;     /* permite quebra em telas grandes se preciso */
+    overflow: visible;
+    text-overflow: clip;
+}
 
-        /* Quando o menu abre → botão vai junto */
-        .openbtn.menu-open {
-            left: 260px; /* sidebar = 250px + folga */
-        }
+/* =========================================================
+   4. SIDEBAR (MENU LATERAL)
+========================================================= */
+.sidebar {
+    top: var(--altura-header);
+    height: calc(100vh - var(--altura-header));
+    width: 0;
+    position: fixed;
+    z-index: 5000 !important;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 20px;
+    background: linear-gradient(
+        to right,
+        rgb(180, 215, 150),
+        rgb(92, 118, 22)
+    );
+    background-size: 100vw 100%;
+    background-position-x: 0;
+}
 
-        /* Quando o menu abre → vira X */
-        .openbtn.menu-open::after {
-            content: "×"; 
-            
-        }
+.sidebar a {
+    padding: 10px 10px 10px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
 
-        /* Esconde o caractere original ☰ quando o X aparecer */
-        .openbtn.menu-open {
-            font-size: 0; /* remove o conteúdo original */
-            
-        }
+.sidebar a:hover {
+    color: #f1f1f1;
+}
 
-        .openbtn.menu-open::after {
-            font-size: 30px; /* exibe só o X */
-            color: aliceblue;
-        }
+.sidebar .closebtn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 36px;
+}
 
-        #main {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden; /* ✅ Evita scroll lateral */
-            transition: margin-left .5s;
-        }
+.sidebar {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
 
-        /* ✅ GALERIA DENTRO DO MENU */
+/* =========================================================
+   5. BOTÃO DO MENU (☰ → X)
+========================================================= */
+.openbtn {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2000;
+    font-size: 26px;
+    cursor: pointer;
+    color: aliceblue;
+    background: none;
+    border: none;
+    padding: 0px 0px;
+    transition: 
+        left 0.4s ease,
+        transform 0.4s ease,
+        background-color 0.3s ease,
+        font-size 0.3s ease;
+}
 
-        .gallery-container {
-            width: 100%;
-            height: 95%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow: hidden;
-            margin-top: 10px;
-        }
+.openbtn.menu-open {
+    left: 260px;
+    font-size: 0;
+}
 
-        .gallery {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow-y: auto;
-            height: 1000px;
-            padding-right: 5px;
-            /* Adicione estes estilos para esconder a barra de rolagem */
-            -ms-overflow-style: none;  /* Para Internet Explorer e Edge */
-            scrollbar-width: none;     /* Para Firefox */
-        }
+.openbtn.menu-open::after {
+    content: "×";
+    font-size: 30px;
+    color: aliceblue;
+}
 
-        /* Adicione esta regra para esconder a barra de rolagem no Chrome, Safari e Opera */
-        .gallery::-webkit-scrollbar {
-            display: none;
-        }
 
-        .gallery img {
-            width: 50%;
-            margin: 0 auto;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .gallery img:hover {
-            transform: scale(1.03);
-        }
-
-        .scroll-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .scroll-btn-baixo {
-            background: none;
-            border: none;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        .scroll-btn img {
-            width: 22px;
-            
-        }
-
-        .scroll-btn-baixo img {
-            width: 22px;
-            
-        }
-
-        /* ====== BOTÕES CAFÉS ====== */
-        .botao {
-            display: flex;
-            flex-wrap: wrap; /* permite quebrar linha no mobile */
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            height: 100%;
-            display: flex;
-            align-items: center; /* centraliza verticalmente */
-        }
-
-        .link-div {
-            width: 130px;
-            height: 100%; /* ocupa toda altura do header */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;  /* centraliza o texto */
-            align-items: center;      /* centraliza horizontalmente */
-        }
-
-        .link-div:hover {
-            transform: scale(1.05);
-        }
-
-        .link-div::after {
-            content: ' ';
-            display: block;
-            width: 100%;
-            height: 4px;
-            background-color: rgb(213, 235, 212);
-            transition: height 0.3s;
-            margin-top: 5px;
-        }
-
-        .link-div:hover::after {
-            height: 6px;
-        }
-
-        .til-botao {
-            user-select: none; /* impede seleção de texto */
-            color: aliceblue;
-            margin: 0;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        /* ✅ Contêiner dos botões dentro do menu lateral */
-        .botao-menu-mobile {
-            display: none; /* aparece só no mobile */
-            flex-direction: column;
-            align-items: center;
-            padding: 10px 0;
-            gap: 12px;
-        }
-
-        /* ✅ Cada botão do menu lateral (mesmo estilo da .link-div) */
-        .botao-menu-mobile .link-div-mobile {
-            width: 80%;                /* ocupa boa parte da largura */
-            height: 50px;              /* altura padrão */
-            background: transparent;   /* sem fundo */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        /* ✅ Linha inferior igual ao header */
-        .botao-menu-mobile .link-div-mobile::after {
-            content: '';
-            display: block;
-            width: 100%;
-            height: 4px;
-            background-color: rgb(213, 235, 212);
-            margin-top: 5px;
-            transition: height 0.3s;
-        }
-
-        /* ✅ Hover igual ao header */
-        .botao-menu-mobile .link-div-mobile:hover {
-            transform: scale(1.05);
-        }
-        .botao-menu-mobile .link-div-mobile:hover::after {
-            height: 6px;
-        }
-
-        /* ✅ Texto igual ao header */
-        .botao-menu-mobile .til-botao {
-            color: aliceblue;
-            margin: 0;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        /* ✅ Desktop: botão nunca aparece */
-        .btn-voltar-galeria {
-            display: none !important;
-        }
-
-        @media (max-width: 900px) {
-
-             /* Centraliza a logo de forma FORÇADA */
-        .cabecalho-container {
-            justify-content: center !important;
-            align-items: center !important;
-            display: flex !important;
-            position: relative;
-        }
-
-        /* Remove qualquer empurrão da logo */
-        .logo-img {
-            margin: 0 auto !important;
-            padding: 0 !important;
-            display: block;
-        }
-
-    /* Garantir que nada dentro empurre ela */
-    .botao {
-        display: none !important;
+@media (max-width: 900px) {
+    .openbtn.menu-open {
+        position: absolute !important;
+        left: 220px !important;
+       
+        transform: none !important;
+        z-index: 6000 !important; /* Apenas dentro do menu */
     }
+}
 
-            .botao {
-                display: none;
-            }
+/* =========================================================
+   6. GALERIA DENTRO DA SIDEBAR
+========================================================= */
+.gallery-container {
+    width: 100%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    margin-top: 10px;
+}
 
-            .logo-img {
-                width: 80px;
-                padding-left: 0px;
-            }
+.gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    height: 1000px;
+    padding-right: 5px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
-            .cabecalho {
-                padding: 8px 0px;
-            }
+.gallery::-webkit-scrollbar {
+    display: none;
+}
 
-            /* ✅ Botão fora do header */
-            .openbtn {
-                position: fixed;
-                top: 70px;     /* abaixo do header */
-                left: 10px;
-                transform: none;
-                font-size: 26px;
-                z-index: 3000;
-            }
+.gallery img {
+    width: 50%;
+    margin: 0 auto;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .2s;
+}
 
-            /* ✅ Quando abrir o menu */
-            .openbtn.menu-open {
-                left: 260px;   /* acompanha o menu */
-                top: 70px;
-            }
+.gallery img:hover {
+    transform: scale(1.03);
+}
 
-            /* ✅ Esconder galeria no mobile */
-            .gallery-container {
-                display: none;
-            }
+.scroll-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
 
-            /* ✅ Exibir botões dos cafés no menu lateral */
-            .sidebar .botao-menu-mobile {
-                display: flex !important;
-            }
+.scroll-btn-baixo {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+}
 
-            /* ✅ Estado inicial */
-            .gallery-container.mobile-active {
-                display: flex !important; /* força aparecer */
-            }
+.scroll-btn img,
+.scroll-btn-baixo img {
+    width: 22px;
+}
 
-            .botao-menu-mobile.hidden {
-                display: none !important;
-            }
+/* =========================================================
+   7. BOTÕES DO MENU MOBILE (APARECEM NA SIDEBAR)
+========================================================= */
+.botao-menu-mobile {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 12px;
+}
 
-            .btn-voltar-galeria {
-                display: none; /* só aparece quando ativada */
-                background-color: rgba(255,255,255,0.2);
-                color: white;
-                padding: 10px 20px;
-                font-size: 16px;
-                border-radius: 6px;
-                margin-bottom: 15px;
-                border: 1px solid rgba(255,255,255,0.3);
-                cursor: pointer;
-                transition: .2s;
-            }
+.botao-menu-mobile .link-div-mobile {
+    width: 80%;
+    height: 50px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .2s;
+}
 
-            .btn-voltar-galeria:hover {
-                background-color: rgba(255,255,255,0.35);
-                transform: scale(1.03);
-            }
+.botao-menu-mobile .link-div-mobile::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 4px;
+    background-color: rgb(213, 235, 212);
+    margin-top: 5px;
+    transition: height 0.3s;
+}
 
-            /* ✅ Botão aparecerá dentro da galeria */
-            .gallery-container.show-back-button .btn-voltar-galeria {
-                display: block !important;
-            }
-        }
+.botao-menu-mobile .link-div-mobile:hover {
+    transform: scale(1.05);
+}
 
-        #map {
-            width: 100%;
-            height: calc(100vh - var(--altura-header));
-        }
+.botao-menu-mobile .link-div-mobile:hover::after {
+    height: 6px;
+}
 
-        .leaflet-control-container .leaflet-bottom.leaflet-right {
-            right: 10px !important;
-            bottom: 10px !important;
-        }
+.botao-menu-mobile .til-botao {
+    color: aliceblue;
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
 
-        .leaflet-control-zoom {
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-            border-radius: 6px;
-        }
+.btn-voltar-galeria {
+    display: none !important;
+}
 
-        :root {
-            --altura-header: 70px; /* ajuste conforme sua necessidade */
-        }
-
-        .legend-control {
-            font-family: system-ui, Arial, sans-serif;
-            background: rgba(255,255,255,0.95);
-            color: #222;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            width: 220px;
-            overflow: hidden;
-            transition: transform 180ms ease, opacity 180ms ease;
-        }
-
-        .legend-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 10px;
-            gap: 8px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .legend-title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .legend-toggle {
-            background: transparent;
-            border: none;
-            font-size: 14px;
-            line-height: 1;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .legend-content {
-            padding: 8px 10px 12px 10px;
-            border-top: 1px solid rgba(0,0,0,0.06);
-            max-height: 220px;
-            overflow: auto;
-            font-size: 13px;
-        }
-
-        .legend-control.collapsed .legend-content {
-            display: none;
-        }
-
-        /* símbolos */
-        .symbol {
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-        .symbol.line-p {
-            width: 28px;
-            height: 6px;
-            background: #4DB411;
-            border-radius: 3px;
-        }
-        .symbol.point {
-            width: 10px;
-            height: 10px;
-            background: #8B4513;
-            border-radius: 50%;
-        }
-        .symbol.perimeter {
-            width: 28px;
-            height: 0;
-            border-top: 4px dashed #ff3b3b;
-            margin-top: 6px;
-        }
-
-        /* responsividade: no mobile a legenda fica mais larga e posicionada um pouco mais dentro */
-        @media (max-width: 600px) {
-            .legend-control {
-                width: calc(100% - 24px);
-                margin-right: 12px;
-                margin-left: 12px;
-            }
-            .legend-content {
-                max-height: 40vh;
-            }
-        }
-
-        .social-icons {
-            display: block;
-            flex-direction: column; /* 🔥 coloca um embaixo do outro */
-        }
-
-        
-        
+/* =========================================================
+   8. ÁREA PRINCIPAL (#main)
+========================================================= */
+#main {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    transition: margin-left .5s;
+}
 
 
 
+/* =========================================================
+   9. MAPA LEAFLET + AJUSTES DE ZOOM
+========================================================= */
+#map {
+    width: 100%;
+    height: calc(100dvh - var(--altura-header));
+}
 
 
 
+.leaflet-control-container .leaflet-bottom.leaflet-right {
+    right: 10px !important;
+    bottom: 10px !important;
+}
+
+.leaflet-control-zoom {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    border-radius: 6px;
+}
+
+/* =========================================================
+   10. LEGENDA (LEAFLET)
+========================================================= */
+.legend-control {
+    font-family: system-ui, Arial, sans-serif;
+    background: rgba(255,255,255,0.95);
+    color: #222;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    width: 220px;
+    overflow: hidden;
+    transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.legend-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.legend-title {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.legend-toggle {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.legend-content {
+    padding: 8px 10px 12px 10px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    max-height: 220px;
+    overflow: auto;
+    font-size: 13px;
+}
+
+.legend-control.collapsed .legend-content {
+    display: none;
+}
+
+/* símbolos */
+.symbol {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.symbol.line-p {
+    width: 28px;
+    height: 6px;
+    background: #4DB411;
+    border-radius: 3px;
+}
+
+.symbol.point {
+    width: 10px;
+    height: 10px;
+    background: #8B4513;
+    border-radius: 50%;
+}
+
+.symbol.perimeter {
+    width: 28px;
+    height: 0;
+    border-top: 4px dashed #ff3b3b;
+    margin-top: 6px;
+}
+
+/* =========================================================
+   11. SOCIAL ICONS
+========================================================= */
+.social-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* opcional, apenas espaço entre os ícones */
+    align-items: center; /* opcional, centraliza os ícones */
+    padding-right: 5px;
+}
+
+.social-icons svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+@media (max-width: 400px) {
+    .social-icons svg {
+        width: 5px;
+        height: 5px;
+    }
+}
 
 
+/* =========================================================
+   12. BOTÃO ÚNICO (MENU LATERAL UNIFICADO)
+========================================================= */
+.btn-menu-unico {
+    position: absolute;
+    right: 15px;
+    top: 80px;
+    z-index: 1000;
+    padding: 8px 14px;
+    background: rgb(102, 134, 74);
+    border: 1px solid rgb(102, 134, 74);
+    border-radius: 8px;
+    cursor: pointer;
+    color: aliceblue;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.box-menu-unico {
+    font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    right: 15px;
+    top: 120px;
+    width: 220px;
+    background: rgb(102, 134, 74);
+    border: 1px solid rgb(102, 134, 74);
+    border-radius: 8px;
+    padding: 12px;
+    z-index: 1000;
+    color: aliceblue;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    display: none;
+}
+
+.box-menu-unico h3 {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.menu-radio {
+    display: block;
+    margin: 6px 0;
+    font-size: 14px;
+}
 
 
-
-
-
-
-
-
-
-        /* Botão único */
-        .btn-menu-unico {
-            position: absolute;
-            right: 15px;
-            top: 80px; /* ajuste conforme preferir */
-            z-index: 1000;
-            padding: 8px 14px;
-            background:rgb(102, 134, 74);
-            border: 1px solid rgb(102, 134, 74);
-            border-radius: 8px;
-            cursor: pointer;
-            color: aliceblue;
-            font-size: 14px;
-            font-weight: bold;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        /* Caixa unificada */
-        .box-menu-unico {
-            font-family: 'Open Sans', sans-serif;
-            position: absolute;
-            right: 15px;
-            top: 120px;
-            width: 220px;
-            background: rgb(102, 134, 74);
-            border: 1px solid rgb(102, 134, 74);
-            border-radius: 8px;
-            padding: 12px;
-            z-index: 1000;
-            color: aliceblue;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-            display: none;
-        }
-
-        .box-menu-unico h3 {
-            margin: 8px 0;
-            font-size: 16px;
-        }
-
-        .menu-radio {
-            display: block;
-            margin: 6px 0;
-            font-size: 14px;
-        }
-
-        /* Legenda */
-        .item-legenda {
-            display: flex;
-            align-items: center;
-            margin-bottom: 6px;
-            font-size: 14px;
-        }
-
-        .cor {
-            width: 8px;
-            height: 8px;
-            display: inline-block;
-            border-radius: 4px;
-            margin-right: 8px;
-            margin-left: 5px;
-        }
-
-        .cor-verde   { background: #4DB411; }
-        .cor-marrom  { background: #8B4513; }
-        .cor-vermelho{ background: #ff3b3b; }
-
-
-
-
-
-
-
-
-
-        /* ===== DROPDOWN ===== */
+/* =========================================================
+   13. DROPDOWN
+========================================================= */
 .dropdown {
     position: relative;
 }
 
-/* MENU: fundo igual ao header, mas com refinamentos */
 .dropdown-menu {
     position: absolute;
-    top: 46px;  /* já está ótimo, não vou mexer */
+    top: 46px;
     left: 0;
-    width: 220px; /* um pouquinho maior melhora a legibilidade */
+    width: 220px;
 
     background: linear-gradient(
         to right,
@@ -612,10 +512,10 @@
     background-size: 100vw 100%;
     background-repeat: no-repeat;
 
-    border-radius: 0 0 10px 10px; /* 🔥 bordas só embaixo (fica MUITO mais elegante) */
+    border-radius: 0 0 10px 10px;
     padding: 6px 0;
 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.35); /* 🔥 sombra suave e profissional */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
 
     display: none;
     z-index: 99999;
@@ -625,14 +525,12 @@
     transition: opacity .20s ease, transform .20s ease;
 }
 
-/* Quando ativado pela classe .show */
 .dropdown-menu.show {
     display: block;
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Itens do menu */
 .dropdown-menu p {
     margin: 0;
     padding: 10px 18px;
@@ -640,78 +538,206 @@
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 14px;
-    letter-spacing: 0.3px; /* fica mais elegante */
+    letter-spacing: 0.3px;
     display: flex;
     align-items: center;
     gap: 10px;
-
     cursor: pointer;
     transition: background .2s ease;
 }
 
-/* Linha divisória entre itens */
 .dropdown-menu p + p {
     border-top: 1px solid rgba(255,255,255,0.25);
 }
 
-/* Hover bonito */
 .dropdown-menu p:hover {
     background: rgba(255,255,255,0.18);
 }
 
-.dropdown-menu, 
+.dropdown-menu,
 .dropdown-menu * {
-    user-select: none; /* impede seleção de texto */
+    user-select: none;
 }
 
 .dropdown-title {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
-    font-size: 13px;       /* 🔥 menor */
+    font-size: 13px;
     color: white;
-    padding: 5px 5px;     /* 🔥 menos altura */
-    user-select: none;     /* não selecionar */
-
-    opacity: 0.9;          /* mais suave */
+    padding: 5px 5px;
+    user-select: none;
+    opacity: 0.9;
 }
 
 
-/* ================================
-   RESPONSIVIDADE PARA NOTEBOOKS
-   ================================ */
-
-@media (max-width: 1280px) and (min-width: 901px) {
+/* =========================================================
+   14. MEDIA QUERIES (MOBILE)
+========================================================= */
+@media (max-width: 900px) {
 
     .cabecalho-container {
-        gap: 8px !important;
-        padding: 0 10px;
+        justify-content: center !important;
+        align-items: center !important;
+        display: flex !important;
+        position: relative;
     }
 
-    /* Reduz largura dos botões */
+    .logo-img {
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: block;
+    }
+
+    .botao {
+        display: none !important;
+    }
+
+    .logo-img {
+        width: 80px;
+        padding-left: 0px;
+    }
+
+    .cabecalho {
+        padding: 8px 0px;
+    }
+
+    .openbtn {
+        position: fixed;
+        top: 70px;
+        left: 10px;
+        transform: none;
+        font-size: 26px;
+        z-index: 3000;
+    }
+
+    .openbtn.menu-open {
+        left: 260px;
+        top: 70px;
+    }
+
+    .gallery-container {
+        display: none;
+    }
+
+    .sidebar .botao-menu-mobile {
+        display: flex !important;
+    }
+
+    .gallery-container.mobile-active {
+        display: flex !important;
+    }
+
+    .botao-menu-mobile.hidden {
+        display: none !important;
+    }
+
+    .btn-voltar-galeria {
+        display: none;
+        background-color: rgba(255,255,255,0.2);
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255,255,255,0.3);
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .btn-voltar-galeria:hover {
+        background-color: rgba(255,255,255,0.35);
+        transform: scale(1.03);
+    }
+
+    .gallery-container.show-back-button .btn-voltar-galeria {
+        display: block !important;
+    }
+}
+
+/* Media query da legenda */
+@media (max-width: 600px) {
+    .legend-control {
+        width: calc(100% - 24px);
+        margin-right: 12px;
+        margin-left: 12px;
+    }
+    .legend-content {
+        max-height: 40vh;
+    }
+}
+
+/* pontos intermediários (notebooks menores) */
+@media (max-width: 1200px) {
+    .cabecalho-container {
+        justify-content: space-between; /* logo / botões / social */
+        flex-wrap: nowrap;              /* NÃO quebrar linha em telas menores */
+    }
+
+    .botao {
+        flex-wrap: nowrap;           /* não quebra */
+        justify-content: space-evenly; /* distribui melhor */
+        gap: 4px;                    /* reduzido para caber */
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: visible;           /* NÃO esconder! */
+    }
+
     .link-div {
-        width: 95px !important;   /* antes era 130px */
+        flex: 1 1 90px;     /* cada botão pode encolher E crescer */
+        min-width: 90px;    /* limite mínimo seguro */
+        max-width: 140px;   /* evita ficar gigante */
+        padding: 8px 4px;
     }
 
     .til-botao {
-        font-size: 11px !important;
+        white-space: nowrap;     /* não quebra */
+        overflow: hidden;        /* não transborda */
+        text-overflow: ellipsis; /* ... se faltar espaço */
+        
+        display: flex;
+        align-items: center;     /* centraliza vertical */
+        justify-content: center; /* centraliza horizontal */
+        
+        height: 100%;            /* ocupa todo o botão */
+        width: 100%;
     }
 
-    /* Logo um pouco menor */
     .logo-img {
-        width: 80px !important;
-        margin-left: 0 !important;
+        margin-left: 12px;
+        width: 90px;
+    }
+}
+@media (max-width: 1500px) {
+    .logo-img {
+        width: 85px !important;
+        margin-left: 30px !important;
         padding-left: 0 !important;
     }
+}
 
-    /* Ícones sociais alinhados à direita sem quebrar */
-    .social-icons {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 6px;
+/* Redução mais forte para telas menores (1366 / 1280 px) */
+@media (max-width: 1350px) {
+    .logo-img {
+        width: 70px !important;
+        margin-left: 10px !important;
     }
+}
 
-    /* Remover altura extra do header */
-    .cabecalho {
-        padding: 4px 0 !important;
+/* ===== Ajuste do espaçamento entre os botões ===== */
+@media (max-width: 1500px) {
+    .botao {
+        gap: 1px !important;   /* antes era ~20px */
     }
+}
+
+/* Bloqueia o overscroll (elastic bounce) no iPhone */
+html.no-bounce,
+body.no-bounce {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: none !important;
+    touch-action: none !important;
 }

@@ -21,15 +21,24 @@ function ajustarSidebar() {
             const btn = document.querySelector(".openbtn");
 
             if (sidebar.style.width === "250px") {
-                // FECHAR
                 sidebar.style.width = "0";
                 btn.classList.remove("menu-open");
+
+                document.body.classList.remove("no-bounce");
+                document.documentElement.classList.remove("no-bounce");
+
             } else {
-                // ABRIR
                 ajustarSidebar();
                 sidebar.style.width = "250px";
                 btn.classList.add("menu-open");
+
+                document.body.classList.add("no-bounce");
+                document.documentElement.classList.add("no-bounce");
             }
+
+            // 🔥 Garante que o mapa e o layout se ajustem
+            ajustarAlturaMapa();
+            setTimeout(() => map.invalidateSize(), 150);
         }
 
         /* ✅ Rolagem da galeria */
@@ -165,6 +174,9 @@ function ajustarSidebar() {
                 setTimeout(() => map.invalidateSize(), 200);
             }
         }
+
+        window.addEventListener("load", ajustarAlturaMapa);
+        window.addEventListener("resize", ajustarAlturaMapa);
 
         const layers = {};
 
@@ -385,4 +397,15 @@ function ajustarDropdownDegrade() {
 window.addEventListener("resize", ajustarDropdownDegrade);
 window.addEventListener("load", ajustarDropdownDegrade);
 
-       
+function abrirPagina(pagina) {
+    const conteudo = document.getElementById("conteudo");
+    const mapa = document.getElementById("map");
+
+    // Esconde o mapa e mostra o container
+    mapa.style.display = "none";
+    conteudo.style.display = "block";
+
+    conteudo.innerHTML = `
+        <iframe src="${pagina}" style="width:100%; height:100%; border:none;"></iframe>
+    `;
+}
