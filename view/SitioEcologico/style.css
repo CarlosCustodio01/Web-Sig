@@ -741,3 +741,147 @@ body.no-bounce {
     -webkit-overflow-scrolling: none !important;
     touch-action: none !important;
 }
+
+
+.legenda-oculta {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+.btn-voltar-mapa {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    z-index: 1500;
+
+    /* CAIXA PEQUENA */
+    background: rgb(102, 134, 74);   /* verde */
+    color: white;                    /* seta branca */
+    padding: 6px 10px;               /* tamanho pequeno e bonito */
+    border-radius: 6px;              /* cantos arredondados */
+    
+    font-size: 20px;                 /* tamanho da seta */
+    font-weight: 700;                /* mais grossa */
+    
+    border: none;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+
+    display: none;
+}
+
+.legenda-oculta {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* =========================================================
+   Botão DOWNLOAD (ajustado para igualar os outros botões mobile)
+========================================================= */
+.download-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0;
+}
+
+/* área que aparece quando o usuário clica no botão (mobile) */
+.download-content {
+    display: none; /* controlado por JS */
+    width: 86%;
+    margin: 8px auto 0 auto;
+    padding: 10px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #f7f7f7;
+    text-align: center;
+    max-height: 40vh;
+    overflow: auto;
+}
+
+.download-content p {
+    margin: 6px 0;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+    transition: background .15s, transform .12s;
+    cursor: pointer;
+}
+
+.download-content p:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+}
+
+/* Garanta espaçamento quando visível (classe usada no HTML inline display:block também funciona) */
+.botao-menu-mobile .download-content[style*="display: block"],
+.botao-menu-mobile .download-content.show {
+    display: block;
+}
+
+/* Pequeno ajuste para evitar corte no topo inferior do sidebar */
+.sidebar {
+    padding-bottom: 18px;
+}
+
+/* ==== BOTÃO CUSTOMIZADO DE CENTRALIZAR MAPA ==== */
+.leaflet-control-custom {
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    width: 34px !important;
+    height: 34px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.leaflet-control-custom:hover {
+    background: #f0f0f0 !important;
+}
+
+.leaflet-control-custom span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    font-size: 20px;
+    line-height: 0; /* evita deslocamento vertical */
+}
+
+
+/* Reduz a largura padrão do popup */
+.leaflet-popup-content-wrapper {
+    max-width: 220px !important;   /* ajuste como preferir */
+    padding: 6px 8px !important;   /* margem interna menor */
+}
+
+/* Reduz espaço interno do conteúdo */
+.leaflet-popup-content {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Botão de fechar menor e mais elegante */
+.leaflet-popup-close-button {
+    font-size: 18px !important;
+    margin: 4px 4px 0 0 !important;
+}
+
+.ponto-cafe-icon {
+    width: 14px;
+    height: 14px;
+    background: #8B4513; /* marrom */
+    border-radius: 50%;
+    border: 1px solid white;
+    box-shadow: 0 0 4px rgba(0,0,0,0.4);
+}

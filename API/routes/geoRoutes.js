@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { buscarPorKey, listarTabelas, listarKeys } = require('../services/geojsonService');
-const { exportKMZ, exportSHP } = require('../controllers/exportController');
+const { exportKMZ, exportSHP, exportKML, exportAllKML, exportAllSHP, exportAllInOne } =
+    require('../controllers/exportController');
+
 
 // /geojson?banco=...&tabela=<cache_table>&key=<layer_key>
 router.get('/geojson', async (req, res) => {
@@ -59,5 +61,10 @@ router.get('/tabelas', async (req, res) => {
 
 router.get('/export/kmz', exportKMZ);
 router.get('/export/shp', exportSHP);
+router.get('/export/kml', exportKML);
+router.get('/export/all_zip', exportAllKML);
+router.get('/export/all_shp', exportAllSHP);
+router.get("/export/all_in_one", exportAllInOne);
+
 
 module.exports = router;

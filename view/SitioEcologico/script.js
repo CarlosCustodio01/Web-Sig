@@ -1,3 +1,5 @@
+let iframeAtivo = false;
+
 
 console.log("Google:", window.google);
 console.log("Mutant:", L.gridLayer && L.gridLayer.googleMutant);
@@ -17,6 +19,8 @@ function ajustarSidebar() {
         }
 
         function toggleNav() {
+            if (iframeAtivo) return; // 🚫 bloqueia menu
+
             const sidebar = document.getElementById("mySidebar");
             const btn = document.querySelector(".openbtn");
 
@@ -36,7 +40,6 @@ function ajustarSidebar() {
                 document.documentElement.classList.add("no-bounce");
             }
 
-            // 🔥 Garante que o mapa e o layout se ajustem
             ajustarAlturaMapa();
             setTimeout(() => map.invalidateSize(), 150);
         }
@@ -96,6 +99,48 @@ function ajustarSidebar() {
             zoomDelta: 0.25
         }).setView([-23.0818420,-45.8220342], 18);
 
+
+
+        // =====================
+        // BOTÃO: CENTRALIZAR MAPA
+        // =====================
+
+        // Defina sua coordenada padrão aqui:
+        const defaultCenter = [-23.0818420, -45.8220342];
+        const defaultZoom = 18;
+
+        // Criar botão customizado igual aos botões de zoom
+        const ResetViewControl = L.Control.extend({
+            options: { position: 'bottomright' },
+
+            onAdd: function () {
+                const container = L.DomUtil.create('div', 'leaflet-control-custom leaflet-bar');
+
+                container.innerHTML = `
+                    <span style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        width:100%;
+                        height:100%;
+                        font-size:18px;
+                        line-height:1;
+                    ">⌕</span>
+                `;
+
+                // Evita que clique/scroll passem para o mapa
+                L.DomEvent.disableClickPropagation(container);
+
+                container.onclick = function () {
+                    map.setView(defaultCenter, defaultZoom);
+                };
+
+                return container;
+            }
+        });
+
+        // Adicionar botão ao mapa
+        map.addControl(new ResetViewControl());
         
 
         // OpenStreetMap (mantém como camada base)
@@ -244,20 +289,139 @@ function ajustarSidebar() {
 
                         // ⭐ Estilo dos pontos (marrom) - colocados no pane de pontos
                         pointToLayer: (feature, latlng) => {
-                            // cria circleMarker no pane de pontos independentemente do pane do layer
-                            return L.circleMarker(latlng, {
-                                radius: 2,
-                                fillColor: "#8B4513",   // marrom
-                                color: "none",
-                                weight: 0,
-                                fillOpacity: 1,
-                                pane: 'pointsPane'
+                            const icon = L.divIcon({
+                                className: "ponto-cafe",
+                                iconSize: [14, 14],
+                                html: `<div class="ponto-cafe-icon"></div>`
                             });
-                        }
+
+                            return L.marker(latlng, { icon, pane: 'pointsPane' });
+                        },
 
                     };
 
-                    layers[name] = L.geoJSON(data, options).addTo(map);
+                    layers[name] = L.geoJSON(data, {
+                        ...options,
+
+                        
+                        onEachFeature: function (feature, layer) {
+
+                            // Popup específico para pontos de café
+                            if (name === "pontos_cafe") {
+                                const p = feature.properties;
+
+                                const popup = `
+                                <div style="
+                                    font-family: 'Poppins', sans-serif;
+                                    font-size: 13px;
+                                    padding: 10px 12px;
+                                    border-radius: 10px;
+                                    background: white;
+                                    color: #333;
+                                    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+                                    border: 1px solid rgba(0,0,0,0.08);
+                                    min-width: 180px;
+                                ">
+                                    <h4 style="
+                                        margin: 0 0 8px 0;
+                                        font-size: 15px;
+                                        font-weight: 600;
+                                        color: rgb(92,118,22);
+                                        border-bottom: 1px solid #ddd;
+                                        padding-bottom: 5px;
+                                    ">
+                                        Ponto de Café
+                                    </h4>
+
+                                    <div><b>Ponto:</b> ${p.ponto ?? "-"}</div>
+                                    <div><b>Tipo:</b> ${p.tipo ?? "-"}</div>
+                                    <div><b>Norte:</b> ${p.norte ?? "-"}</div>
+                                    <div><b>Leste:</b> ${p.leste ?? "-"}</div>
+                                    <div><b>Elevação:</b> ${p.elevação ?? "-"}</div>
+                                </div>
+                                `;
+
+                                layer.bindPopup(popup);
+                                return; // Não aplica popup genérico
+                            }
+
+                            if (name === "linhas_cafe") {
+                                const p = feature.properties;
+
+                                const popup = `
+                                <div style="
+                                    font-family: 'Poppins', sans-serif;
+                                    font-size: 13px;
+                                    padding: 10px 12px;
+                                    border-radius: 10px;
+                                    background: white;
+                                    color: #333;
+                                    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+                                    border: 1px solid rgba(0,0,0,0.08);
+                                    min-width: 180px;
+                                ">
+                                    <h4 style="
+                                        margin: 0 0 8px 0;
+                                        font-size: 15px;
+                                        font-weight: 600;
+                                        color: #4DB411;
+                                        border-bottom: 1px solid #ddd;
+                                        padding-bottom: 5px;
+                                    ">
+                                        Linha de Plantio
+                                    </h4>
+
+                                    <div><b>Quantidade:</b> ${p.quant ?? "-"}</div>
+                                    <div><b>Tipo:</b> ${p.tipo ?? "-"}</div>
+                                </div>
+                                `;
+
+                                layer.bindPopup(popup);
+                                return;
+                            }
+
+                            // Popup específico para o perímetro
+                            if (name === "perimetro") {
+                                const p = feature.properties;
+
+                                const popup = `
+                                <div style="
+                                    font-family: 'Poppins', sans-serif;
+                                    font-size: 13px;
+                                    padding: 10px 12px;
+                                    border-radius: 10px;
+                                    background: white;
+                                    color: #333;
+                                    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+                                    border: 1px solid rgba(0,0,0,0.08);
+                                    min-width: 180px;
+                                ">
+                                    <h4 style="
+                                        margin: 0 0 8px 0;
+                                        font-size: 15px;
+                                        font-weight: 600;
+                                        color: #ff3b3b;
+                                        border-bottom: 1px solid #ddd;
+                                        padding-bottom: 5px;
+                                    ">
+                                        Perímetro
+                                    </h4>
+
+                                    <div><b>Sítio:</b> ${p.sitio ?? "-"}</div>
+                                    <div><b>Área (ha):</b> ${p["area(ha)"] ?? "-"}</div>
+                                </div>
+                                `;
+
+                                layer.bindPopup(popup);
+                                return;
+                            }
+
+                            
+                        }
+                        
+                    }).addTo(map);
+
+
                 })
                 .catch(err => {
                     console.error(`Erro carregando GeoJSON "${name}" de ${url}:`, err);
@@ -401,12 +565,104 @@ function abrirPagina(pagina) {
     const conteudo = document.getElementById("conteudo");
     const mapa = document.getElementById("map");
 
-    // Esconde o mapa e mostra o container
     mapa.style.display = "none";
     conteudo.style.display = "block";
+
+    const btnLegenda = document.getElementById("btnMenuUnico");
+    const boxLegenda = document.getElementById("boxMenuUnico");
+
+    if (btnLegenda) {
+        btnLegenda.style.display = "none";
+        btnLegenda.classList.add("legenda-oculta");
+    }
+
+    if (boxLegenda) {
+        boxLegenda.style.display = "none";
+        boxLegenda.classList.add("legenda-oculta");
+    }
 
     conteudo.innerHTML = `
         <iframe src="${pagina}" style="width:100%; height:100%; border:none;"></iframe>
     `;
-    console.log("abrindo:", pagina);
+
+    // 🔥 MOSTRA O BOTÃO DE VOLTAR
+    document.getElementById("btnVoltarMapa").style.display = "block";
+
+    iframeAtivo = true;
+
+    // desabilita o botão de menu
+    const btnMenu = document.querySelector(".openbtn");
+    btnMenu.style.display = "none";
+
+    // fecha o menu se estiver aberto
+    document.getElementById("mySidebar").style.width = "0";
+    btnMenu.classList.remove("menu-open");
+}
+
+function voltarParaMapa() {
+    const conteudo = document.getElementById("conteudo");
+    const mapa = document.getElementById("map");
+
+    // mostra o mapa
+    mapa.style.display = "block";
+
+    // esconde e limpa o iframe
+    conteudo.style.display = "none";
+    conteudo.innerHTML = "";
+
+    // volta legenda e botão
+    const btnLegenda = document.getElementById("btnMenuUnico");
+    const boxLegenda = document.getElementById("boxMenuUnico");
+
+    if (btnLegenda) {
+        btnLegenda.style.display = "block";
+        btnLegenda.classList.remove("legenda-oculta");
+    }
+
+    if (boxLegenda) {
+        boxLegenda.style.display = "none"; 
+        boxLegenda.classList.remove("legenda-oculta");
+    }
+
+    // 🔥 ESCONDE O BOTÃO DE VOLTAR
+    document.getElementById("btnVoltarMapa").style.display = "none";
+
+    iframeAtivo = false;
+
+    // reabilita botão de menu
+    const btnMenu = document.querySelector(".openbtn");
+    btnMenu.style.display = "block";
+
+    // recalcular mapa
+    setTimeout(() => map.invalidateSize(), 200);
+}
+
+function toggleDropdownMobile() {
+    const menu = document.getElementById("dropdown-mobile-menu");
+
+    if (menu.style.display === "block") {
+        menu.style.display = "none";
+    } else {
+        menu.style.display = "block";
+    }
+}
+
+function toggleDownload() {
+    const box = document.getElementById("download-content");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+function baixarArquivo(tipo) {
+    const banco = "Sitio_Ecologico";  // ajuste se precisar
+    const tabela = "collection_geojson_cache";
+
+    if (tipo === "todas") {
+        window.location.href = `http://localhost:5000/export/all_in_one?banco=${banco}&tabela=${tabela}`;
+    }
+    if (tipo === "kmz") {
+        window.location.href = `http://localhost:5000/export/all_zip?banco=${banco}&tabela=${tabela}`;
+    }
+    if (tipo === "shp") {
+        window.location.href = `http://localhost:5000/export/all_shp?banco=${banco}&tabela=${tabela}`;
+    }
 }
