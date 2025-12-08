@@ -9,14 +9,14 @@ map.attributionControl.setPrefix('');
 map.attributionControl.addAttribution('&copy; <a href="https://leafletjs.com/" target="_blank">Leaflet</a> | <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors |');
 
 // URLs dos arquivos GeoJSON
-const geojsonUrl1 = 'https://api.geowebsig.shop/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key=rio';
-const geojsonUrl2 = 'https://api.geowebsig.shop/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="perimetro"';
-const geojsonUrl3 = 'https://api.geowebsig.shop/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="cursos_dagua"';
-const geojsonUrl4 = 'https://api.geowebsig.shop/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="estradas"';
-const geojsonUrl5 = 'https://api.geowebsig.shop/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="lotes_poligonos"';
-const geojsonUrl6 = 'https://api.geowebsig.shop/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="nascentes"'; // <- esta camada vai ter rachura
-const geojsonUrl7 = 'https://api.geowebsig.shop/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="reserva_legal"';
-const geojsonUrl8 = 'https://api.geowebsig.shop/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="reserva_legal_compensacao"';
+const geojsonUrl1 = 'http://localhost:5000/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key=rio';
+const geojsonUrl2 = 'http://localhost:5000/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="perimetro"';
+const geojsonUrl3 = 'http://localhost:5000/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="cursos_dagua"';
+const geojsonUrl4 = 'http://localhost:5000/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="estradas"';
+const geojsonUrl5 = 'http://localhost:5000/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="lotes_poligonos"';
+const geojsonUrl6 = 'http://localhost:5000/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="nascentes"'; // <- esta camada vai ter rachura
+const geojsonUrl7 = 'http://localhost:5000/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="reserva_legal"';
+const geojsonUrl8 = 'http://localhost:5000/geojson?banco=assentamento_pa_egidio_brunetto&tabela=collection_geojson_cache&key="reserva_legal_compensacao"';
 
 
 

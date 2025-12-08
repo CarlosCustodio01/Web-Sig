@@ -878,10 +878,44 @@ body.no-bounce {
 }
 
 .ponto-cafe-icon {
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
     background: #8B4513; /* marrom */
     border-radius: 50%;
-    border: 1px solid white;
     box-shadow: 0 0 4px rgba(0,0,0,0.4);
 }
+
+/* Cluster: mantém visual do ícone de café com número branco centralizado */
+.ponto-cafe-cluster {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.ponto-cafe-cluster .ponto-cafe-icon.cluster {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #8B4513; /* cor do ícone de café — altere se necessário */
+    color: #8B4513;      /* número em branco */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    border: 2px solid rgba(255,255,255,0.12);
+}
+
+/* Ajuste de posicionamento do elemento do Leaflet para não cortar o conteúdo */
+.leaflet-marker-icon.ponto-cafe-cluster {
+    transform: translate3d(-50%, -50%, 0);
+    text-align: center;
+}
+

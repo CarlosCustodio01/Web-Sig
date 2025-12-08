@@ -99,6 +99,8 @@ function ajustarSidebar() {
             zoomDelta: 0.25
         }).setView([-23.0818420,-45.8220342], 18);
 
+        
+
 
 
         // =====================
@@ -243,7 +245,7 @@ function ajustarSidebar() {
         // URLS DOS SEUS GEOJSON (AJUSTE SE PRECISAR)
         const geojsonUrlPontos = 'http://localhost:5000/geojson?banco=Sitio_Ecologico&tabela=collection_geojson_cache&key=pontos_cafe';
         const geojsonUrlLinhas = 'http://localhost:5000/geojson?banco=Sitio_Ecologico&tabela=collection_geojson_cache&key=linhas_plantio';
-        const geojsonUrlPerimetro = 'http://localhost:5000/geojson?banco=Sitio_Ecologico&tabela=collection_geojson_cache&key=perimetro';
+        const geojsonUrlPerimetro ='http://localhost:5000/geojson?banco=Sitio_Ecologico&tabela=collection_geojson_cache&key=perimetro';
 
         // estilo específico para perímetro (tracejado vermelho)
         const PerimetroStyle = {
@@ -256,7 +258,7 @@ function ajustarSidebar() {
 
         // 📌 FUNÇÃO PRINCIPAL PARA CARREGAR GEOJSON
         // agora aceita paneName (string) para controlar z-order
-        function loadGeoJSON(name, url, lineStyle = null, paneName = null) {
+        function loadGeoJSON(name, url, lineStyle = null, paneName = null, useCluster = false) {
             if (!url) {
                 console.error("URL inválida para", name);
                 return;
@@ -265,20 +267,15 @@ function ajustarSidebar() {
             fetch(url)
                 .then(r => r.json())
                 .then(data => {
+                    const targetPane = paneName || 'pointsPane';
                     const options = {
-                        // se foi fornecido paneName, aplicamos ao layer inteiro
                         pane: paneName || undefined,
-
-                        // ⭐ Estilo: aplica corretamente para linhas e polígonos
                         style: feature => {
                             const t = feature.geometry && feature.geometry.type ? feature.geometry.type : '';
-                            // linhas
                             if (t === "LineString" || t === "MultiLineString") {
                                 return lineStyle || {};
                             }
-                            // polígonos (aplica stroke; mantém fill conforme style)
                             if (t === "Polygon" || t === "MultiPolygon") {
-                                // se foi passado um lineStyle, usamos sua cor/peso e desativamos fill por padrão
                                 if (lineStyle) {
                                     return Object.assign({ fill: false }, lineStyle);
                                 }
@@ -286,53 +283,27 @@ function ajustarSidebar() {
                             }
                             return {};
                         },
-
-                        // ⭐ Estilo dos pontos (marrom) - colocados no pane de pontos
                         pointToLayer: (feature, latlng) => {
+                            const title = (feature.properties && (feature.properties.ponto || feature.properties.nome)) || '';
+                            const iconHtml = `<div class="ponto-cafe-icon" title="${title}"></div>`;
                             const icon = L.divIcon({
                                 className: "ponto-cafe",
-                                iconSize: [14, 14],
-                                html: `<div class="ponto-cafe-icon"></div>`
+                                html: iconHtml,
+                                iconSize: [18, 18]
                             });
-
-                            return L.marker(latlng, { icon, pane: 'pointsPane' });
+                            return L.marker(latlng, { icon, pane: targetPane });
                         },
-
                     };
 
-                    layers[name] = L.geoJSON(data, {
+                    // Cria o layer GeoJSON (sem adicionar ainda ao mapa)
+                    const geoLayer = L.geoJSON(data, {
                         ...options,
-
-                        
                         onEachFeature: function (feature, layer) {
-
-                            // Popup específico para pontos de café
                             if (name === "pontos_cafe") {
-                                const p = feature.properties;
-
+                                const p = feature.properties || {};
                                 const popup = `
-                                <div style="
-                                    font-family: 'Poppins', sans-serif;
-                                    font-size: 13px;
-                                    padding: 10px 12px;
-                                    border-radius: 10px;
-                                    background: white;
-                                    color: #333;
-                                    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-                                    border: 1px solid rgba(0,0,0,0.08);
-                                    min-width: 180px;
-                                ">
-                                    <h4 style="
-                                        margin: 0 0 8px 0;
-                                        font-size: 15px;
-                                        font-weight: 600;
-                                        color: rgb(92,118,22);
-                                        border-bottom: 1px solid #ddd;
-                                        padding-bottom: 5px;
-                                    ">
-                                        Ponto de Café
-                                    </h4>
-
+                                <div style="font-family: 'Poppins', sans-serif; font-size: 13px; padding: 10px 12px; border-radius: 10px; background: white; color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.08); min-width: 180px;">
+                                    <h4 style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: rgb(92,118,22); padding-bottom: 5px;">Ponto de Café</h4>
                                     <div><b>Ponto:</b> ${p.ponto ?? "-"}</div>
                                     <div><b>Tipo:</b> ${p.tipo ?? "-"}</div>
                                     <div><b>Norte:</b> ${p.norte ?? "-"}</div>
@@ -342,35 +313,14 @@ function ajustarSidebar() {
                                 `;
 
                                 layer.bindPopup(popup);
-                                return; // Não aplica popup genérico
+                                return;
                             }
 
                             if (name === "linhas_cafe") {
-                                const p = feature.properties;
-
+                                const p = feature.properties || {};
                                 const popup = `
-                                <div style="
-                                    font-family: 'Poppins', sans-serif;
-                                    font-size: 13px;
-                                    padding: 10px 12px;
-                                    border-radius: 10px;
-                                    background: white;
-                                    color: #333;
-                                    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-                                    border: 1px solid rgba(0,0,0,0.08);
-                                    min-width: 180px;
-                                ">
-                                    <h4 style="
-                                        margin: 0 0 8px 0;
-                                        font-size: 15px;
-                                        font-weight: 600;
-                                        color: #4DB411;
-                                        border-bottom: 1px solid #ddd;
-                                        padding-bottom: 5px;
-                                    ">
-                                        Linha de Plantio
-                                    </h4>
-
+                                <div style="font-family: 'Poppins', sans-serif; font-size: 13px; padding: 10px 12px; border-radius: 10px; background: white; color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.08); min-width: 180px;">
+                                    <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #4DB411; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Linha de Plantio</h4>
                                     <div><b>Quantidade:</b> ${p.quant ?? "-"}</div>
                                     <div><b>Tipo:</b> ${p.tipo ?? "-"}</div>
                                 </div>
@@ -380,33 +330,11 @@ function ajustarSidebar() {
                                 return;
                             }
 
-                            // Popup específico para o perímetro
                             if (name === "perimetro") {
-                                const p = feature.properties;
-
+                                const p = feature.properties || {};
                                 const popup = `
-                                <div style="
-                                    font-family: 'Poppins', sans-serif;
-                                    font-size: 13px;
-                                    padding: 10px 12px;
-                                    border-radius: 10px;
-                                    background: white;
-                                    color: #333;
-                                    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-                                    border: 1px solid rgba(0,0,0,0.08);
-                                    min-width: 180px;
-                                ">
-                                    <h4 style="
-                                        margin: 0 0 8px 0;
-                                        font-size: 15px;
-                                        font-weight: 600;
-                                        color: #ff3b3b;
-                                        border-bottom: 1px solid #ddd;
-                                        padding-bottom: 5px;
-                                    ">
-                                        Perímetro
-                                    </h4>
-
+                                <div style="font-family: 'Poppins', sans-serif; font-size: 13px; padding: 10px 12px; border-radius: 10px; background: white; color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.08); min-width: 180px;">
+                                    <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 600; color: #ff3b3b; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Perímetro</h4>
                                     <div><b>Sítio:</b> ${p.sitio ?? "-"}</div>
                                     <div><b>Área (ha):</b> ${p["area(ha)"] ?? "-"}</div>
                                 </div>
@@ -415,13 +343,51 @@ function ajustarSidebar() {
                                 layer.bindPopup(popup);
                                 return;
                             }
-
-                            
                         }
-                        
-                    }).addTo(map);
+                    });
 
+                    // Se solicitado, crie um MarkerClusterGroup com chunkedLoading (melhora performance)
+                    if (useCluster && name === "pontos_cafe") {
+                        const cluster = L.markerClusterGroup({
+                            chunkedLoading: true,
+                            chunkProgress: (processed, total, elapsed) => {
+                                if (elapsed > 1000) {
+                                    console.log(`Cluster progresso: ${processed}/${total}`);
+                                }
+                            },
+                            removeOutsideVisibleBounds: true,
+                            maxClusterRadius: 20,
+                            // Permitir "spiderfy" quando não der para dar mais zoom
+                            spiderfyOnMaxZoom: true,
+                            // Desabilita agrupamento a partir deste nível (assim não agrupa tanto quando estiver perto)
+                            disableClusteringAtZoom: 24,
+                            showCoverageOnHover: false,
+                            // opcional: mantém cluster pequeno e com contador
+                            iconCreateFunction: function (cluster) {
+                                const count = cluster.getChildCount();
+                                const html = `<div class="ponto-cafe-icon cluster">${count}</div>`;
+                                return L.divIcon({
+                                    html,
+                                    className: 'ponto-cafe-cluster',
+                                    iconSize: [28, 28]
+                                });
+                            }
+                        });
 
+                        // adicionar marcadores individuais ao cluster (preserva ícone)
+                        geoLayer.eachLayer(function (layer) {
+                            if (layer instanceof L.Marker) {
+                                cluster.addLayer(layer);
+                            }
+                        });
+
+                        cluster.addTo(map);
+                        layers[name] = cluster;
+                    } else {
+                        // padrão: adiciona diretamente ao mapa
+                        geoLayer.addTo(map);
+                        layers[name] = geoLayer;
+                    }
                 })
                 .catch(err => {
                     console.error(`Erro carregando GeoJSON "${name}" de ${url}:`, err);
@@ -431,8 +397,8 @@ function ajustarSidebar() {
         // carregar perímetro com estilo tracejado vermelho (pane menor)
         loadGeoJSON("perimetro", geojsonUrlPerimetro, PerimetroStyle, 'perimeterPane');
 
-        // ✅ CARREGAR PONTOS (ficam marrons automaticamente) - pane de pontos (acima)
-        loadGeoJSON("pontos_cafe", geojsonUrlPontos, null, 'pointsPane');
+        // ✅ CARREGAR PONTOS usando cluster (melhora performance)
+        loadGeoJSON("pontos_cafe", geojsonUrlPontos, null, 'pointsPane', true);
 
         // ✅ CARREGAR LINHAS (ficam VERDES) - pane de linhas (abaixo dos pontos)
         loadGeoJSON("linhas_cafe", geojsonUrlLinhas, LinhaPlantioStyle, 'linesPane');
@@ -665,4 +631,4 @@ function baixarArquivo(tipo) {
     if (tipo === "shp") {
         window.location.href = `http://localhost:5000/export/all_shp?banco=${banco}&tabela=${tabela}`;
     }
-}
+    }
