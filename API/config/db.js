@@ -3,21 +3,21 @@ const { Pool } = require('pg');
 // Mapeia os bancos disponíveis
 const dbConfigs = {
     Dados_Jacarei: {
-        user: 'Felipe',
-        host: 'Localhost',
+        user: 'felipe',
+        host: 'localhost',
         database: 'Dados_Jacarei',
         password: 'carlosfelipe',
         port: 5432,
     },
     assentamento_pa_egidio_brunetto: {
-        user: 'Felipe',
+        user: 'felipe',
         host: 'Localhost',
         database: 'assentamento_pa_egidio_brunetto',
         password: 'carlosfelipe',
         port: 5432,
     },
     Sitio_Ecologico: {
-        user: 'Felipe',
+        user: 'felipe',
         host: 'Localhost',
         database: 'sitio_ecologico',
         password: 'carlosfelipe',
