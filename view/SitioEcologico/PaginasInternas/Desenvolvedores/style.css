@@ -6,6 +6,7 @@ body, html {
     font-family: 'Poppins', sans-serif;
     background: #f3f7ec;
     height: 100%;
+    overflow-x: hidden;
 }
 
 /* Container geral */
@@ -78,4 +79,16 @@ body, html {
         grid-template-columns: 1fr;
         gap: 15px;
     }
+}
+/* strip full width */
+.dev-full {
+    margin-top: 20px;
+    display: flex;           /* faz o card ficar alinhado dentro da caixa */
+    justify-content: center; /* centraliza o card */
+    padding: 20px;           /* igual à faixa de cima */
+}
+
+.dev-full .dev-item {
+    width: 100%;             /* ocupa toda a largura disponível */
+    max-width: 100%;         /* garante que não ultrapasse */
 }
